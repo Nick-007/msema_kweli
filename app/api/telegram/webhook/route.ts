@@ -16,7 +16,7 @@ async function sendTelegramAction(chatId: number, act: string): Promise<() => vo
         body: JSON.stringify({ chat_id: chatId, action: act }),
       });
       // Delay before sending the next "typing" action
-      await new Promise(resolve => setTimeout(resolve, 4000)); // Sends "action..." every 4 seconds
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Sends "action..." every 5 seconds
     }
   }
   // Start the typing loop
@@ -31,16 +31,11 @@ async function sendTelegramAction(chatId: number, act: string): Promise<() => vo
 // Helper function to send messages to Telegram
 async function sendTelegramMessage(chatId: number, message: string): Promise<void> {
   const TELEGRAM_API_URL = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`;
-  const stopTyping = await sendTelegramAction(chatId,"typing");
-  // Simulate some processing time (e.g., fetching data, computing response)
-  await new Promise(resolve => setTimeout(resolve, 10000));
-  
   await fetch(TELEGRAM_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: chatId, text: message }),
   });
-  stopTyping();
 }
 // Define the structure of the request body
 interface Message {
@@ -165,15 +160,13 @@ export async function POST(req: NextRequest): Promise<Response> {
     // Node.js streaming method to handle the response body
     const decoder = new TextDecoder();
     let aiReply = ''; // Accumulate the entire AI response
-
+    const stopTyping= await sendTelegramAction(chatId, "typing");
     // Stream the response data from the AI API using Node.js stream
     for await (const chunk of continueThreadResponse.body as any) {
       const chunkText = decoder.decode(chunk, { stream: true });
       aiReply += chunkText;
-
-      // Optionally send partial responses to Telegram as chunks arrive
-      //await sendTelegramAction(chatId, "typing");
     }
+    stopTyping();
 // Function to convert API response string into an array of event objects
 const convertStringToEventObjects = (responseString: string): EventObject[] => {
   const eventObjects: EventObject[] = [];
@@ -233,7 +226,7 @@ const eventObjects = convertStringToEventObjects(aiReply);
 const response: EventObject[] = eventObjects;
 const { finalText, messageEvents } = processOpenAIEvents(response);
 
-console.log("Final message:", finalText);
+//console.log("Final message:", finalText);
 //console.log("Collected message events:", messageEvents);
 
     // Send the final accumulated message to Telegram
