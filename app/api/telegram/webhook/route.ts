@@ -15,13 +15,13 @@ async function sendTelegramMessage(chatId: number, message: string): Promise<voi
     body: JSON.stringify({ chat_id: chatId, text: message }),
   });
 }
-async function sendTelegramAction(chatId: number, action: string): Promise<void> {
+async function sendTelegramAction(chatId: number, act: string): Promise<void> {
   const TELEGRAM_API_URL = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendChatAction`;
 
   await fetch(TELEGRAM_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, action: action }),
+    body: JSON.stringify({ chat_id: chatId, action: act }),
   });
 }
 
