@@ -33,8 +33,8 @@ async function sendTelegramMessage(chatId: number, message: string): Promise<voi
   const TELEGRAM_API_URL = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`;
   const stopTyping = await sendTelegramAction(chatId,"typing");
   // Simulate some processing time (e.g., fetching data, computing response)
-  await new Promise(resolve => setTimeout(resolve, 5000));
-
+  await new Promise(resolve => setTimeout(resolve, 10000));
+  
   await fetch(TELEGRAM_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -172,7 +172,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       aiReply += chunkText;
 
       // Optionally send partial responses to Telegram as chunks arrive
-      await sendTelegramAction(chatId, "typing");
+      //await sendTelegramAction(chatId, "typing");
     }
 // Function to convert API response string into an array of event objects
 const convertStringToEventObjects = (responseString: string): EventObject[] => {
