@@ -86,7 +86,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         development agendas and budget allocations for Kenyan county
         governments ensuring they comply with existing policies.
       `;
-      await sendTelegramAction(chatId, "typing");
+      await sendTelegramAction(chatId, defaultreply);
       // Return a success response to the client
       return new Response(JSON.stringify({ status: 'success', reply: defaultreply }), {
         status: 200,
@@ -155,7 +155,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       aiReply += chunkText;
 
       // Optionally send partial responses to Telegram as chunks arrive
-      await sendTelegramMessage(chatId, chunkText);
+      await sendTelegramAction(chatId, "typing");
     }
 // Function to convert API response string into an array of event objects
 const convertStringToEventObjects = (responseString: string): EventObject[] => {
