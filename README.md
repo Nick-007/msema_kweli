@@ -24,7 +24,7 @@ The app is hosted online, and no installation is required.
 The app can be run through various platforms:
 
 1. **Website**: Access the msemaKweli website directly in your web browser.
-   - Navigate to [msemaKweli Website].
+   - Navigate to [msemaKweli Website](https://msema-kweli.vercel.app/).
    - Use the interface to perform fact-checking, policy alignment checks, and audit report analysis.
 
 2. **Telegram Bot**: Use the Telegram bot by searching for `@msemaKweliBot`.

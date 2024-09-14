@@ -73,11 +73,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const text: string = body.message.text;
 
     if (text === '/start') {
-      const defaultreply = `
-        Welcome to Msema Kweli bot, a fact-checking assistant to validate
-        development agendas and budget allocations for Kenyan county
-        governments ensuring they comply with existing policies.
-      `;
+      const defaultreply = 'Welcome to Msema Kweli bot, a fact-checking assistant to validate development agendas and budget allocations for Kenyan county governments ensuring they comply with existing policies.';
       sendTelegramMessage(chatId, defaultreply);
       // Return a success response to the client
       return new Response(JSON.stringify({ status: 'success', reply: defaultreply }), {
