@@ -21,7 +21,7 @@ async function sendTelegramAction(chatId: number, action: string): Promise<void>
   await fetch(TELEGRAM_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text: action }),
+    body: JSON.stringify({ chat_id: chatId, action: action }),
   });
 }
 
