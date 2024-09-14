@@ -5,26 +5,43 @@ import fetch from 'node-fetch';
 // Mock storage to track thread IDs by user (you can replace this with a proper database)
 const threadStore: Record<number, string> = {}; // Example: { [chatId]: threadId }
 
+async function sendTelegramAction(chatId: number, act: string): Promise<() => void> {
+  const TELEGRAM_API_URL = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendChatAction`;
+  let isTyping = true;
+  async function typingLoop(): Promise<void> {
+    while (isTyping) {
+      await fetch(TELEGRAM_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, action: act }),
+      });
+      // Delay before sending the next "typing" action
+      await new Promise(resolve => setTimeout(resolve, 4000)); // Sends "action..." every 4 seconds
+    }
+  }
+  // Start the typing loop
+  typingLoop();
+
+  return () => {
+    // Function to stop typing
+    isTyping = false;
+  };
+}
+
 // Helper function to send messages to Telegram
 async function sendTelegramMessage(chatId: number, message: string): Promise<void> {
   const TELEGRAM_API_URL = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`;
+  const stopTyping = await sendTelegramAction(chatId,"typing");
+  // Simulate some processing time (e.g., fetching data, computing response)
+  await new Promise(resolve => setTimeout(resolve, 5000));
 
   await fetch(TELEGRAM_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: chatId, text: message }),
   });
+  stopTyping();
 }
-async function sendTelegramAction(chatId: number, act: string): Promise<void> {
-  const TELEGRAM_API_URL = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendChatAction`;
-
-  await fetch(TELEGRAM_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, action: act }),
-  });
-}
-
 // Define the structure of the request body
 interface Message {
   chat: {
