@@ -92,7 +92,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const chatId: number = body.message.chat.id;
     const text: string = body.message.text;
 
-    if (text === '/start') {
+    if (text === '\/start') {
       const defaultreply = `
         Welcome to Msema Kweli bot, a fact-checking assistant to validate
         development agendas and budget allocations for Kenyan county
