@@ -39,10 +39,51 @@ async function sendTelegramMessage(chatId: number, message: string): Promise<voi
 }
 // Define the structure of the request body
 interface Message {
-  chat: {
-    id: number;
-  };
-  text: string;
+  message_id: number;
+  from?: User;
+  date: number;
+  chat: Chat;
+  text?: string;
+  photo?: PhotoSize[];
+  document?: Document;
+  video?: any; // Add more detailed type if needed
+  audio?: any; // Add more detailed type if needed
+  voice?: any; // Add more detailed type if needed
+  video_note?: any; // Add more detailed type if needed
+  sticker?: any; // Add more detailed type if needed
+  animation?: any; // Add more detailed type if needed
+}
+
+interface User {
+  id: number;
+  is_bot: boolean;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+}
+
+interface Chat {
+  id: number;
+  type: 'private' | 'group' | 'supergroup' | 'channel';
+  title?: string;
+  username?: string;
+  first_name?: string;
+  last_name?: string;
+}
+
+interface PhotoSize {
+  file_id: string;
+  width: number;
+  height: number;
+  file_size?: number;
+}
+
+interface Document {
+  file_id: string;
+  file_name?: string;
+  mime_type?: string;
+  file_size?: number;
 }
 
 // Define the structure of the full request body
@@ -89,6 +130,16 @@ export async function POST(req: NextRequest): Promise<Response> {
       });
     }
 
+    // List of file-related message types to ignore
+    if (body.message.photo || body.message.document || body.message.video || body.message.audio || body.message.voice || body.message.video_note || body.message.sticker || body.message.animation) {
+      const filereply = 'Sorry attachments are not allowed';
+      await sendTelegramMessage(body.message.chat.id, filereply);
+      // Return a success response to the client
+      return new Response(JSON.stringify({ status: 'success', reply: filereply }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });// Respond with HTTP 200 to acknowledge the update without processing it
+    }
     const chatId: number = body.message.chat.id;
     const text: string = body.message.text;
 
