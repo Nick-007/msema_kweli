@@ -51,6 +51,9 @@ The app relies on officially published data repositories containing documents su
 ## Documentation
 - The app references key documents from the County government budget and audit reports. These highlight variances between financial statements, unsupported expenditures, and misclassified funds.
 
+## Roadmap  
+https://gist.github.com/Nick-007/4216dd238a7e548cae302fce0a1b86b2
+
 ## Contributing
 We welcome contributions! Please follow these steps:
 1. Fork the repository.
